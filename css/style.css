@@ -1,0 +1,17 @@
+body {
+  background-color: #8FABD4;
+  height: 100vh;
+}
+
+#canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#canvas {
+  width: 600px;
+  height: 400px;
+  background-color: #FFFFFF;
+}
