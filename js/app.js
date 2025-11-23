@@ -94,21 +94,23 @@ function ballMovement () {
 function ballWallCollision () {
   if (ball.positionY - ball.size < 0) {
     ball.directionY *= -1;
-    ball.speedX += 0.5;
   }
   if (ball.positionY + ball.size > canvasEl.height) {
     ball.directionY *= -1;
-    ball.speedX += 0.5;
   }
 };
 
 function ballPaddleCollision () {
   if (ball.positionX - ball.size  <= p1Paddle.positionX + p1Paddle.width && ball.positionY - ball.size >= p1Paddle.positionY && ball.positionY + ball.size <= p1Paddle.positionY + p1Paddle.height) {
     ball.directionX *= -1;
+    ball.speedX += 0.5;
+    ball.positionX = p1Paddle.positionX + p1Paddle.width + ball.size;
   }
 
   if (ball.positionX + ball.size  >= p2Paddle.positionX && ball.positionY - ball.size >= p2Paddle.positionY && ball.positionY + ball.size <= p2Paddle.positionY + p2Paddle.height) {
     ball.directionX *= -1;
+    ball.speedX += 0.5;
+    ball.positionX = p2Paddle.positionX - ball.size;
   }
 };
 
@@ -117,12 +119,14 @@ function playerScore () {
     p2Score += 1;
     ball.positionX =canvasEl.width / 2;
     ball.positionY =canvasEl.width / 2;
+    ball.speedX = 1;
     console.log("p2 Score = " + p2Score);
   }
   else if (ball.positionX - ball.size > canvasEl.width) {
     p1Score += 1;
     ball.positionX =canvasEl.width / 2;
     ball.positionY =canvasEl.width / 2;
+    ball.speedX = 1;
     console.log("p1 Score = " + p1Score);
   }
 };
