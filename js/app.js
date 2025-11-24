@@ -1,5 +1,6 @@
 // Constants ---------------------------------------------------------
 const resultEl = document.querySelector('#result');
+const pauseEl = document.querySelector('.pause-btn');
 const canvasEl = document.querySelector('#canvas');
 
 const ctx = canvasEl.getContext('2d');
@@ -30,6 +31,8 @@ const p2Paddle = {
   height: 80,
   speed: 6,
 };
+
+let isPaused = false;
 
 let gameStarted = false;
 let opacity = 1;
@@ -220,105 +223,25 @@ function resetBall () {
   ball.speedX = 4;
 };
 
-function playerScore (event) {
+function playerScore () {
   if (ball.positionX + ball.size < 0) {
-    console.log(p2Score)
-    if(p2Score == 5){
-      ball.positionX= canvasEl.width / 2, 
-      ball.positionY= canvasEl.height / 2,
-        ball.directionX= -1,
-  ball.directionY= 1,
-  ball.speedX= 4,   
-  ball.speedY= 4,
-  ball.size= 8,
-      freezBall =true
-      gameStarted = false;
-      p2Score = 0
-
-
-      // console.log('salman')
-      // createStartScreen()
-    }
-    else if(p2Score < 5){
-      p2Score += 1;
-      resetBall();
-    }
-
-        document.addEventListener('keydown', (event) => {
-  if (event.key === "Enter") {
-    gameStarted = true;
-    cancelAnimationFrame(animationFrameId);
-    render();
-
-    countdownIntervalId = setInterval(() => {
-      countdownValue -= 1;
-
-      if (countdownValue < 1) {
-        clearInterval(countdownIntervalId);
-        countdownActive = false;
-        freezBall = false;
-    }
-    }, 1000);
-  }
-});
-    
+    p2Score += 1;
+    resetBall();
   }
   else if (ball.positionX - ball.size > canvasEl.width) {
-    if(p1Score == 5){
-      ball.positionX= canvasEl.width / 2, 
-      ball.positionY= canvasEl.height / 2,
-        ball.directionX= -1,
-  ball.directionY= 1,
-  ball.speedX= 4,   
-  ball.speedY= 4,
-  ball.size= 8,
-      freezBall =true
-      gameStarted = false;
-      p1Score = 0
-      console.log('salman')
-      // createStartScreen()
-      
-    }
-    else if(p1Score < 5){
-      p1Score += 1;
-      resetBall();
-    }
-    document.addEventListener('keydown', (event) => {
-  if (event.key === "Enter") {
-    gameStarted = true;
-    cancelAnimationFrame(animationFrameId);
-    render();
-
-    countdownIntervalId = setInterval(() => {
-      countdownValue -= 1;
-
-      if (countdownValue < 1) {
-        clearInterval(countdownIntervalId);
-        countdownActive = false;
-        freezBall = false;
-    }
-    }, 1000);
-  }
-});
-  }
-
-  if (p1Score === winningScore) {
-    
-  }
-  else if (p2Score === winningScore) {
-
+    p1Score += 1;
+    resetBall();
   }
 };
 
-function gameOver (player) {
-  gameStarted = false;
-  countdownActive = true;
-  freezBall = true;
-  createStartScreen();
+function gameReset () {
 
 };
 
 function render () {
+  if (isPaused === true) {
+    return;
+  }
   ctx.fillStyle = 'white';
   ballMovement();
   paddleMovement();
@@ -386,5 +309,19 @@ document.addEventListener('keyup', (event) => {
   }
   else if (event.key === "ArrowDown") {
     p2DownPressed = false;
+  }
+});
+
+  pauseEl.addEventListener('click', (event) => {
+    if (!gameStarted) {
+      return;
+    }
+
+  if (!isPaused) {
+    isPaused = true;
+  }
+  else {
+    isPaused = false
+    render();
   }
 });

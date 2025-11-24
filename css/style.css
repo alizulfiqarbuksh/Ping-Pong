@@ -19,11 +19,27 @@ body {
   background-color: black;
 }
 
-#canvas-container div{
+.Instructions-div,
+.result-div {
   text-align: center;
   border: solid 5px;
   border-color: #3B9797;
   border-radius: 20px;
   width: 80%;
   background-color: #16476A;
+}
+
+.pause-btn {
+  margin-top: 10px;
+  padding: 6px 12px 6px 12px;
+  border: solid 5px;
+  border-radius: 20px;
+  background-color: #16476A;
+  color: white;
+  border-color: #3B9797;
+}
+
+.pause-btn:hover {
+  background-color: #3B9797;
+  cursor: pointer;
 }
