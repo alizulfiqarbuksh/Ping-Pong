@@ -3,17 +3,14 @@ const canvasEl = document.querySelector('#canvas');
 
 const ctx = canvasEl.getContext('2d');
 
-ctx.fillStyle = 'white';
-
-
 // variables ---------------------------------------------------------
 const ball = {
-  positionX: 300, 
-  positionY: 200,
+  positionX: canvasEl.width / 2, 
+  positionY: canvasEl.height / 2,
   directionX: -1,
   directionY: 1,
-  speedX: 1,   
-  speedY: 1,
+  speedX: 4,   
+  speedY: 4,
   size: 8,
 };
 
@@ -33,8 +30,19 @@ const p2Paddle = {
   speed: 6,
 };
 
-p1Score = 0;
-p2Score = 0;
+let gameStarted = false;
+let opacity = 1;
+let fadingOut = true;
+let animationFrameId;
+
+let countdownValue = 3;
+let countdownActive = true;
+let countdownIntervalId;
+
+let freezBall = true;
+
+let p1Score = 0;
+let p2Score = 0;
 
 let p1UpPressed = false;
 let p1DownPressed = false;
@@ -43,7 +51,41 @@ let p2DownPressed = false;
 
 let maxDown = canvasEl.height - p1Paddle.height;
 
-// Functions ---------------------------------------------------------
+// draw functions ----------------------------------------------------
+function createStartScreen () {
+  
+    clearCanvas();
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+
+    ctx.save();
+    
+    ctx.globalAlpha = opacity;
+    ctx.fillStyle = "white";
+    ctx.font = "40px Arial";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.fillText("Press ENTER to Start", canvasEl.width / 2, canvasEl.height / 2);
+
+    ctx.restore();
+
+    if (fadingOut) {
+        opacity -= 0.01;
+        if (opacity <= 0) {
+            opacity = 0;
+            fadingOut = false;
+        }
+    } else {
+        opacity += 0.01;
+        if (opacity >= 1) {
+            opacity = 1;
+            fadingOut = true;
+        }
+    }
+
+    animationFrameId = requestAnimationFrame(createStartScreen);
+};
+
 function createBall () {
   ctx.beginPath();
   ctx.arc(ball.positionX, ball.positionY, ball.size, 0, Math.PI * 2);
@@ -59,6 +101,34 @@ function clearCanvas () {
       ctx.clearRect(0, 0, 600, 400);
 };
 
+function createNet () {
+  ctx.strokeStyle = 'white';
+  ctx.setLineDash([10, 10]);
+  ctx.beginPath();
+  ctx.moveTo(canvasEl.width / 2, 30);
+  ctx.lineTo(canvasEl.width / 2, canvasEl.height - 30);
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.setLineDash([]);
+};
+
+function scoreText () {
+  ctx.font = "20px Arial";
+  ctx.textBaseline = "top";
+  ctx.textAlign = "center";
+  ctx.fillText(`${p1Score}   :   ${p2Score}`, canvasEl. width / 2, 0);
+};
+
+function createCountDown () {
+  if (countdownActive) {
+    ctx.font = "100px Arial";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.fillText(countdownValue, canvasEl. width / 2, canvasEl.height / 2);
+  }
+};
+
+// Logic functions ---------------------------------------------------
 function paddleMovement () {
   if (p1UpPressed === true) {
     p1Paddle.positionY -= p1Paddle.speed;
@@ -87,6 +157,10 @@ function paddleMovement () {
 };
 
 function ballMovement () {
+  if (freezBall === true) {
+    return;
+  }
+
   ball.positionX += ball.speedX * ball.directionX;
   ball.positionY += ball.speedY * ball.directionY;
 };
@@ -100,54 +174,101 @@ function ballWallCollision () {
   }
 };
 
+function ballSpeed () {
+  if (ball.speedX !== 10) {
+    ball.speedX += 1;
+  }
+};
+
+function hitAngle (paddle) {
+  const paddleCenter = (paddle.positionY + paddle.height) / 2;
+  const ballCenter = ball.positionY;
+  ball.positionY = (ballCenter - paddleCenter) * 0.05;
+};
+
 function ballPaddleCollision () {
-  if (ball.positionX - ball.size  <= p1Paddle.positionX + p1Paddle.width && ball.positionY - ball.size >= p1Paddle.positionY && ball.positionY + ball.size <= p1Paddle.positionY + p1Paddle.height) {
-    ball.directionX *= -1;
-    ball.speedX += 0.5;
+  const leftHorizontal = ball.positionX - ball.size  <= p1Paddle.positionX + p1Paddle.width && ball.positionX + ball.size >= p1Paddle.positionX;
+
+  const leftVertical = ball.positionY - ball.size <= p1Paddle.positionY + p1Paddle.height && ball.positionY + ball.size >= p1Paddle.positionY;
+
+  const rightHorizontal = ball.positionX + ball.size >= p2Paddle.positionX && ball.positionX - ball.size <= p2Paddle.positionX + p2Paddle.width;
+
+  const rightVertical = ball.positionY + ball.size >= p2Paddle.positionY && ball.positionY - ball.size <= p2Paddle.positionY + p2Paddle.height;
+
+  if (leftHorizontal && leftVertical) 
+  {
     ball.positionX = p1Paddle.positionX + p1Paddle.width + ball.size;
+    ball.directionX *= -1;
+    // hitAngle(p1Paddle);
+    ballSpeed();
   }
 
-  if (ball.positionX + ball.size  >= p2Paddle.positionX && ball.positionY - ball.size >= p2Paddle.positionY && ball.positionY + ball.size <= p2Paddle.positionY + p2Paddle.height) {
-    ball.directionX *= -1;
-    ball.speedX += 0.5;
+  if (rightHorizontal && rightVertical) 
+  {
     ball.positionX = p2Paddle.positionX - ball.size;
+    ball.directionX *= -1;
+    // hitAngle(p2Paddle);
+    ballSpeed();
   }
+};
+
+function resetBall () {
+  ball.positionX =canvasEl.width / 2;
+  ball.positionY =canvasEl.height / 2;
 };
 
 function playerScore () {
   if (ball.positionX + ball.size < 0) {
     p2Score += 1;
-    ball.positionX =canvasEl.width / 2;
-    ball.positionY =canvasEl.width / 2;
+    resetBall();
     ball.speedX = 1;
-    console.log("p2 Score = " + p2Score);
   }
   else if (ball.positionX - ball.size > canvasEl.width) {
     p1Score += 1;
-    ball.positionX =canvasEl.width / 2;
-    ball.positionY =canvasEl.width / 2;
+    resetBall();
     ball.speedX = 1;
-    console.log("p1 Score = " + p1Score);
   }
 };
 
-function displayElements () {
+function render () {
+  ctx.fillStyle = 'white';
   ballMovement();
   paddleMovement();
   ballWallCollision();
   ballPaddleCollision();
   playerScore();
   clearCanvas();
+  createNet();
+  scoreText();
   createBall();
   createPaddle(p1Paddle);
-  createPaddle(p2Paddle); 
-  requestAnimationFrame(displayElements);
+  createPaddle(p2Paddle);
+  createCountDown();
+  requestAnimationFrame(render);
 };
 
-displayElements();
+createStartScreen();
 
 // Events ---------------------------------------------------------
+
+
 document.addEventListener('keydown', (event) => {
+  if (!gameStarted && event.key === "Enter") {
+    gameStarted = true;
+    cancelAnimationFrame(animationFrameId);
+    render();
+
+    countdownIntervalId = setInterval(() => {
+      countdownValue -= 1;
+
+      if (countdownValue < 1) {
+        clearInterval(countdownIntervalId);
+        countdownActive = false;
+        freezBall = false;
+    }
+    }, 1000);
+  }
+  
   if (event.key === "ArrowUp" || event.key === "ArrowDown") {
     event.preventDefault();
   }
