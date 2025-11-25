@@ -233,15 +233,24 @@ function playerScore () {
   if (ball.positionX + ball.size < 0) {
     p2Score += 1;
     resetBall();
+    if (p2Score === winningScore) {
+      gameReset('Player 2');
+    }
   }
   else if (ball.positionX - ball.size > canvasEl.width) {
     p1Score += 1;
     resetBall();
+    if (p1Score === winningScore) {
+      gameReset('Player 1');
+    }
   }
 };
 
-function gameReset () {
-
+function gameReset (player) {
+  isPaused = true;
+  p1Score = 0;
+  p2Score = 0;
+  resultEl.textContent = `${player} wins please press pause to start`;
 };
 
 function render () {
