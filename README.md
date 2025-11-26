@@ -2,22 +2,32 @@
 
 # Ping-pong Game
 
-Ping-pong is a game where two players go against each other trying to keep the ball from going past their paddles. players score points by hitting the ball past their opponents paddle. once a player reaches score of 5 they win and the game displayes the winner.
+**Ping-Pong** is a classic two-player arcade game where players compete to keep the ball from passing their paddle. Each player scores a point when the ball gets past their opponent. The first player to reach 5 points wins the match, and the game displays the winner on screen.
 
 # Getting started
 
-[Ping Pong game link](https://alizulfiqarbuksh.github.io/ping-pong-game-project/)
+Play the game here:
+[Ping-Pong game](https://alizulfiqarbuksh.github.io/ping-pong-game-project/)
 
-Instructions
+**Controls:**
 
-* press Enter key to start the game.
-* Use W & S keys for player 1 paddle.
-* Use Up & Down arrow keys for player 2.
-* Once the game ends press reset button to play again.
+* **Enter** — Start the game
+* **W / S** — Move Player 1 paddle up and down
+* **Arrow Up / Arrow Down** — Move Player 2 paddle up * and down
+* **Reset Button** — Restart the game after a winner is declared
+
+**Planning Materials**
+
+* GitHub: [Project plan](https://github.com/alizulfiqarbuksh/Game-Project-Planning)
 
 # Attributions
 
+**Special thanks to:**
 
+***Salman Murtaza***, Instructional Associate — for the game reset guidance.
+[Game reset guide](https://github.com/SalmanMurtazaMinhas/reset)
+
+No other external libraries or assets were used.
 
 # Technologies used
 
@@ -25,10 +35,13 @@ the technologies used to complete this project were:
 * HTML
 * CSS
 * Javascript
+* Research resources such as **Google** and **YouTube**.
 
 # Next steps
 
-Many things can be added in the game to make it even more fun and enjoyable for the future such as:
+**Here are some exciting features that could be added in future updates:**
 
-power ups that can benefit a player when collected.
-adding a rush mode with a timer so which ever player scores the most in that time wins.
+* **Power-ups** (larger paddle, faster ball, invisible ball, slow motion)
+* **Rush Mode** — A timed mode where the highest score wins.
+* **Solo Mode** (AI Player) — Add computer paddle movement with difficulty levels.
+* Animated paddle and ball trails.
