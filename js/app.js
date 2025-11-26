@@ -189,12 +189,6 @@ function ballSpeed () {
   }
 };
 
-// function hitAngle (paddle) {
-//   const paddleCenter = (paddle.positionY + paddle.height) / 2;
-//   const ballCenter = ball.positionY;
-//   ball.positionY = (ballCenter - paddleCenter) * 0.05;
-// };
-
 function ballPaddleCollision () {
   const leftHorizontal = ball.positionX - ball.size  <= p1Paddle.positionX + p1Paddle.width && ball.positionX + ball.size >= p1Paddle.positionX;
 
@@ -210,7 +204,6 @@ function ballPaddleCollision () {
     paddleHitSound.play();
     ball.positionX = p1Paddle.positionX + p1Paddle.width + ball.size;
     ball.directionX *= -1;
-    // hitAngle(p1Paddle);
     ballSpeed();
   }
 
@@ -220,7 +213,6 @@ function ballPaddleCollision () {
     paddleHitSound.play();
     ball.positionX = p2Paddle.positionX - ball.size;
     ball.directionX *= -1;
-    // hitAngle(p2Paddle);
     ballSpeed();
   }
 };
@@ -235,17 +227,12 @@ function playerScore () {
   if (ball.positionX + ball.size < 0) {
     p2Score += 1;
     resetBall();
-    // if (p2Score === winningScore) {
-    //   gameReset('Player 2');
-    // }
   }
   else if (ball.positionX - ball.size > canvasEl.width) {
     p1Score += 1;
     resetBall();
-    // if (p1Score === winningScore) {
-    //   gameReset('Player 1');
-    // }
   }
+  
   if (p1Score >= winningScore || p2Score >= winningScore) {
     gameOver = true;
     freezBall = true;
