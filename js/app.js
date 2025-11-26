@@ -6,7 +6,8 @@ const canvasEl = document.querySelector('#canvas');
 
 const ctx = canvasEl.getContext('2d');
 
-const paddleHitSound = new Audio('../sounds/Tennis-ball-hit.mp3');
+const paddleHitSound = new Audio('../sounds/sport_table_tennis_ping_pong_bat_hit_ball_001.mp3');
+const clickSound = new Audio('../sounds/computer-mouse-click-02-383961.mp3');
 
 // variables ---------------------------------------------------------
 const ball = {
@@ -17,6 +18,7 @@ const ball = {
   speedX: 4,   
   speedY: 4,
   size: 8,
+  color: "white",
 };
 
 const p1Paddle = {
@@ -25,6 +27,7 @@ const p1Paddle = {
   width: 15,
   height: 80,
   speed: 6,
+  color: "red",
 };
 
 const p2Paddle = {
@@ -33,6 +36,7 @@ const p2Paddle = {
   width: 15,
   height: 80,
   speed: 6,
+  color: "blue",
 };
 
 let isPaused = false;
@@ -96,6 +100,7 @@ function createStartScreen() {
 };
 
 function createBall () {
+  ctx.fillStyle = ball.color;
   ctx.beginPath();
   ctx.arc(ball.positionX, ball.positionY, ball.size, 0, Math.PI * 2);
   ctx.fill();
@@ -103,6 +108,7 @@ function createBall () {
 };
 
 function createPaddle (paddle) {
+  ctx.fillStyle = paddle.color;
   ctx.fillRect(paddle.positionX, paddle.positionY, paddle.width, paddle.height);
 };
 
@@ -130,6 +136,7 @@ function scoreText () {
 
 function createCountDown () {
   if (countdownActive) {
+    ctx.fillStyle = "White";
     ctx.font = "100px Arial";
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
@@ -205,6 +212,7 @@ function ballPaddleCollision () {
     ball.positionX = p1Paddle.positionX + p1Paddle.width + ball.size;
     ball.directionX *= -1;
     ballSpeed();
+    ball.color = p1Paddle.color;
   }
 
   if (rightHorizontal && rightVertical) 
@@ -214,6 +222,7 @@ function ballPaddleCollision () {
     ball.positionX = p2Paddle.positionX - ball.size;
     ball.directionX *= -1;
     ballSpeed();
+    ball.color = p2Paddle.color;
   }
 };
 
@@ -232,7 +241,7 @@ function playerScore () {
     p1Score += 1;
     resetBall();
   }
-  
+
   if (p1Score >= winningScore || p2Score >= winningScore) {
     gameOver = true;
     freezBall = true;
@@ -355,14 +364,20 @@ document.addEventListener('keyup', (event) => {
       return;
     }
 
+    clickSound.currentTime = 0;
+    clickSound.play();
+
   if (!isPaused) {
     isPaused = true;
   }
   else {
     isPaused = false
+    render();
   }
 });
 
 resetEl.addEventListener('click', () => {
+  clickSound.currentTime = 0;
+  clickSound.play();
   gameReset();
 });
