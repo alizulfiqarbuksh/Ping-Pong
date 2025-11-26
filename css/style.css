@@ -16,7 +16,10 @@ body {
 }
 
 #canvas {
-  background-color: black;
+  border: solid 2px;
+  border-color: white;
+  border-radius: 10px;
+  background-color: #3374de;
 }
 
 .Instructions-div,
@@ -24,7 +27,7 @@ body {
   text-align: center;
   border: solid 5px;
   border-color: #3B9797;
-  border-radius: 20px;
+  border-radius: 10px;
   width: 80%;
   background-color: #16476A;
 }

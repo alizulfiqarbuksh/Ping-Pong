@@ -68,13 +68,13 @@ let maxDown = canvasEl.height - p1Paddle.height;
 function createStartScreen() {
   
     clearCanvas();
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "#4285F4";
     ctx.fillRect(0, 0, canvasEl.width, canvasEl.height);
 
     ctx.save();
     
     ctx.globalAlpha = opacity;
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "black";
     ctx.font = "40px Arial";
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
@@ -110,6 +110,7 @@ function createBall () {
 function createPaddle (paddle) {
   ctx.fillStyle = paddle.color;
   ctx.fillRect(paddle.positionX, paddle.positionY, paddle.width, paddle.height);
+  ctx.strokeRect(paddle.positionX, paddle.positionY, paddle.width, paddle.height);
 };
 
 function clearCanvas () {
@@ -121,7 +122,7 @@ function createNet () {
   ctx.setLineDash([10, 10]);
   ctx.beginPath();
   ctx.moveTo(canvasEl.width / 2, 30);
-  ctx.lineTo(canvasEl.width / 2, canvasEl.height - 30);
+  ctx.lineTo(canvasEl.width / 2, canvasEl.height - 10);
   ctx.lineWidth = 2;
   ctx.stroke();
   ctx.setLineDash([]);
@@ -191,7 +192,7 @@ function ballWallCollision () {
 };
 
 function ballSpeed () {
-  if (ball.speedX !== 10) {
+  if (ball.speedX !== 13) {
     ball.speedX += 1;
   }
 };
