@@ -373,8 +373,6 @@ document.addEventListener('keyup', (event) => {
   }
   else {
     isPaused = false
-    resultEl.textContent = "";
-    render();
   }
 });
 
